@@ -36,7 +36,7 @@ fn main() {
 
 ---
 
-## 🎨 Craft: UI Engine for Home
+## Craft: UI Engine for Home
 
 Build beautiful, native desktop and mobile applications with Home.
 
@@ -63,16 +63,7 @@ fn main() {
 
 ---
 
-## ⚡ Core Repositories
-
-- **[home](https://github.com/home-lang/home)** - The Home compiler and standard library
-- **[craft](https://github.com/home-lang/craft)** - UI engine for desktop and mobile apps
-- **[pantry](https://github.com/home-lang/pantry)** - Official package registry
-- **[vscode-home](https://github.com/home-lang/home)** - VSCode extension
-
----
-
-## 🚀 Why Home?
+## Why Home?
 
 **⚡ Fast** - 30-50% faster compile times than Zig
 **🔒 Safe** - Memory safety without the ceremony
@@ -82,7 +73,7 @@ fn main() {
 
 ---
 
-## 🌟 Get Started
+## Get Started
 
 ```bash
 # Clone the compiler
@@ -104,7 +95,7 @@ home run examples/hello.home
 
 - **[GitHub Discussions](https://github.com/home-lang/home/discussions)** - Questions & ideas
 - **[Discord](https://discord.gg/home-lang)** - Real-time chat
-- **[Twitter/X](https://twitter.com/homelang)** - Updates & announcements
+- **[Bluesky](https://bluesky.com/homelang) & [Twitter/X](https://twitter.com/homelang)** - Updates & announcements
 
 ---
 
