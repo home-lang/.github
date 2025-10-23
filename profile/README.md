@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏡 The Home Programming Language
+# The Home Programming Language
 
 **A systems language that doesn't compromise**
 
@@ -40,11 +40,12 @@ fn main() {
 
 ## Why Home?
 
-**⚡ Fast** - 30-50% faster compile times than Zig
-**🔒 Safe** - Memory safety without the ceremony
-**😊 Joyful** - TypeScript-inspired syntax that feels natural
-**🔋 Batteries Included** - HTTP, database, queues in stdlib
-**📦 Modern Tooling** - Built-in package manager, formatter, LSP
+- **⚡ Fast** - Lightning-quick compile times with aggressive IR caching and parallel builds
+- **🔒 Safe** - Memory safety without the ceremony of manual management or complex lifetimes
+- **😊 Joyful** - TypeScript-inspired syntax that feels natural and familiar
+- **🔋 Batteries Included** - HTTP server, database access, queues, and async runtime in stdlib
+- **📦 Modern Tooling** - Built-in package management, formatter, and LSP
+- **🎨 Cross-Platform UI** - Build native desktop and mobile apps alongside your web apps
 
 ---
 
