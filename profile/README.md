@@ -14,7 +14,7 @@
 
 ## What is Home?
 
-Home is a modern programming language for systems and application development. We deliver blazing compile times, memory safety without ceremony, and APIs that spark joy.
+Home is a modern programming language for systems and application development that delivers fast compile times, memory safety without ceremony, and APIs that spark joy. [Crafting](https://github.com/home-lang/craft) cross-platform apps has never been easier.
 
 ```home
 import std/http { Server }
@@ -35,33 +35,6 @@ fn main() {
 **Package Manager:** `pantry/` for dependencies • `.freezer` for lockfiles
 
 **Configuration:** `home.toml` • `couch.toml` • `couch.json(c)`
-
----
-
-## Craft: UI Engine for Home
-
-Build beautiful, native desktop and mobile applications with Home.
-
-**[Craft](https://github.com/home-lang/craft)** is our official UI engine - combining the power of native performance with the simplicity of modern web-like APIs.
-
-```home
-import craft { Window, Button, Text }
-
-fn main() {
-  let window = Window.create("My App", 800, 600)
-
-  window.render(fn() {
-    Text("Welcome to Craft")
-    Button("Click me", fn() {
-      print("Button clicked!")
-    })
-  })
-
-  window.show()
-}
-```
-
-**Learn more:** [github.com/home-lang/craft](https://github.com/home-lang/craft)
 
 ---
 
