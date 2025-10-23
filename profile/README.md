@@ -31,7 +31,9 @@ fn main() {
 ```
 
 **File Extensions:** `.home` or `.hm`
+
 **Package Manager:** `pantry/` for dependencies • `.freezer` for lockfiles
+
 **Configuration:** `home.toml` • `couch.toml` • `couch.json(c)`
 
 ---
