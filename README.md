@@ -67,9 +67,8 @@ fn main() {
 
 - **[home](https://github.com/home-lang/home)** - The Home compiler and standard library
 - **[craft](https://github.com/home-lang/craft)** - UI engine for desktop and mobile apps
-- **[registry](https://github.com/home-lang/registry)** - Official package registry
-- **[examples](https://github.com/home-lang/examples)** - Real-world Home examples
-- **[vscode-home](https://github.com/home-lang/vscode-home)** - VSCode extension
+- **[pantry](https://github.com/home-lang/pantry)** - Official package registry
+- **[vscode-home](https://github.com/home-lang/home)** - VSCode extension
 
 ---
 
