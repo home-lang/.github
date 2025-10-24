@@ -40,12 +40,12 @@ fn main() {
 
 ## Why Home?
 
-- **⚡ Fast** - Lightning-quick compile times with aggressive IR caching and parallel builds
-- **🔒 Safe** - Memory safety without the ceremony of manual management or complex lifetimes
-- **😊 Joyful** - TypeScript-inspired syntax that feels natural and familiar
-- **🔋 Batteries Included** - HTTP server, database access, queues, and async runtime in stdlib
-- **📦 Modern Tooling** - Built-in package management, formatter, and LSP
-- **🎨 Cross-Platform UI** - Build native desktop and mobile apps alongside your web apps
+- **Fast** - Lightning-quick compile times with aggressive IR caching and parallel builds
+- **Safe** - Memory safety without the ceremony of manual management or complex lifetimes
+- **Joyful** - TypeScript-inspired syntax that feels natural and familiar
+- **Batteries Included** - HTTP server, database access, queues, and async runtime in stdlib
+- **Modern Tooling** - Built-in package management, formatter, and LSP
+- **Cross-Platform UI** - Build native desktop and mobile apps alongside your web apps
 
 ---
 
