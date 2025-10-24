@@ -4,7 +4,7 @@
 
 **A systems language that doesn't compromise**
 
-*The speed of Zig. The safety of Rust. The joy of TypeScript.*
+*There is no language like Home. The speed of Zig. The safety of Rust. The joy of TypeScript.*
 
 **[home-lang.org](https://home-lang.org)** • **[Docs](https://home-lang.org)** • **[GitHub Discussions](https://github.com/home-lang/home/discussions)** • **[Discord](https://discord.gg/home-lang)**
 
