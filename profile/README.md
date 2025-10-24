@@ -6,7 +6,7 @@
 
 *The speed of Zig. The safety of Rust. The joy of TypeScript.*
 
-**[home-lang.org](https://home-lang.org)** • **[Docs](https://home-lang.org)** • **[Discord](https://discord.gg/home-lang)**
+**[home-lang.org](https://home-lang.org)** • **[Docs](https://home-lang.org)** • **[GitHub Discussions](https://github.com/home-lang/home/discussions)** • **[Discord](https://discord.gg/home-lang)**
 
 </div>
 
@@ -64,14 +64,6 @@ home run examples/hello.home
 ```
 
 **[Read the docs →](https://docs.home-lang.org)**
-
----
-
-## 💬 Community
-
-- **[GitHub Discussions](https://github.com/home-lang/home/discussions)** - Questions & ideas
-- **[Discord](https://discord.gg/home-lang)** - Real-time chat
-- **[Bluesky](https://bluesky.com/homelang) & [Twitter/X](https://twitter.com/homelang)** - Updates & announcements
 
 ---
 
