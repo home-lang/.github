@@ -17,7 +17,7 @@
 Home is a modern programming language for systems and application development that delivers fast compile times, memory safety without ceremony, and APIs that spark joy. [Crafting](https://github.com/home-lang/craft) cross-platform apps has never been easier.
 
 ```home
-import std/http { Server }
+import basics/http { Server }
 
 fn main() {
   let server = Server.bind(":3000")
