@@ -4,7 +4,7 @@
 
 **There is no language like Home**
 
-### The JavaScript & TypeScript runtime with zero dependencies
+### The lightweight & performant JavaScript & TypeScript
 
 *Run TS directly. No `node_modules` toolchain. No `tsc`. No bundler. One binary.*
 
