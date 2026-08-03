@@ -4,7 +4,7 @@
 
 **There is no language like Home**
 
-### The lightweight & performant JavaScript & TypeScript
+### The lightweight & performant JavaScript & TypeScript engine
 
 *Run TS directly. No `node_modules` toolchain. No `tsc`. No bundler. One binary.*
 
