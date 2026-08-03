@@ -6,9 +6,9 @@
 
 ### The lightweight & performant JavaScript & TypeScript engine
 
-*Run TS directly. No `node_modules` toolchain. No `tsc`. No bundler. One binary.*
+*Run TS directly. Real threads over a shared heap. No GIL. One binary.*
 
-**[Compiler](https://github.com/home-lang/home)** • **[Docs](https://github.com/home-lang/home/tree/main/docs)** • **[Parity status](https://github.com/home-lang/home#parity-status)** • **[Discord](https://discord.gg/home-lang)**
+**[Compiler](https://github.com/home-lang/home)** • **[Engine](https://github.com/zig-utils/zig-js)** • **[Docs](https://github.com/home-lang/home/tree/main/docs)** • **[Parity status](https://github.com/home-lang/home#parity-status)** • **[Discord](https://discord.gg/home-lang)**
 
 </div>
 
@@ -16,8 +16,8 @@
 
 ## What is Home?
 
-Home runs **JavaScript and TypeScript** in its own JavaScriptCore realm — not
-Node's, not a wrapper around someone else's runtime. TypeScript executes
+Home runs **JavaScript and TypeScript** on its own engine — written from
+scratch in Zig, not a fork of V8 or JavaScriptCore. TypeScript executes
 directly, with no build step and no transpiler in the way.
 
 ```bash
@@ -37,29 +37,64 @@ waiting whenever TypeScript runs out of room.
 
 ---
 
-## Single-threaded semantics, multithreaded toolchain
+## Actually multithreaded JavaScript
 
-JavaScript's single-threaded model is the one you already reason about —
-one event loop, no data races, `async`/`await` all the way down. Home keeps
-it exactly as you expect.
+Every mainstream JS runtime gives you *isolation* and calls it threading:
+workers with separate heaps, talking through serialized messages. Home's
+engine does that too — and then goes considerably further.
 
-What Home does *not* keep single-threaded is everything underneath it:
+**Two thread models, both real:**
 
-- **Parallel type-checking & compilation** — the multi-file program graph
-  fans out across one worker thread per core, popping files off an atomic
-  cursor; regression-tested to produce output identical to a serial run
-- **Parallel native builds** — multi-core codegen with aggressive IR caching
-- **Parallel dependency installs** — Pantry resolves, fetches, and unpacks
-  across a thread pool instead of serially
-- **Parallel test execution** — an isolated worker process per core, with a
-  coordinator aggregating results (landing as part of the runtime port)
+| Model | What's shared | What crosses the boundary |
+|---|---|---|
+| **Agent / worker isolation** | Nothing — each OS thread owns its context, globals, and heap | Structured-clone bytes, `SharedArrayBuffer` |
+| **Shared-realm `Thread`** | One heap, one global object, one shape tree, **shared object identity** | Ordinary function arguments and return values |
 
-So your code stays simple and single-threaded, while your machine's cores go
-to work on the parts that are safe to parallelize.
+That second row is the one nobody else offers. Spawned `Thread`s execute
+JavaScript **concurrently on real OS threads over a single garbage-collected
+heap — with no global interpreter lock**, in parallel by default:
 
-> **Roadmap:** JS-visible threading — `worker_threads` and Web `Worker` — is
-> the next frontier and **not implemented yet**. Tracked in
-> [PARITY-NODE.md](https://github.com/home-lang/home/blob/main/docs/PARITY-NODE.md).
+```js
+const box = { n: 0 }
+
+const t = new Thread((shared) => {
+  shared.n += 1        // the *same* object — no postMessage, no clone
+  return shared
+}, box)
+
+t.join() === box       // true: object identity survives the thread boundary
+```
+
+The concurrency toolkit is first-class JavaScript: `Thread`, `Lock`,
+`Condition`, `ThreadLocal`, `ConcurrentAccessError`, property-mode `Atomics.*`,
+and proposal-aligned `Atomics.Mutex` / `Atomics.Condition`. A deterministic
+GIL mode stays available for when you want serialized interleavings.
+
+**What it measures** (eight lanes, versus JavaScriptCore):
+
+| Mode | Throughput vs JSC | Scaling |
+|---|---:|---:|
+| Direct warmed context (1 lane) | **2.32×** | — |
+| Independent steady contexts (8 lanes) | **2.53×** | **5.35×** (JSC: 4.96×) |
+| **Shared realm, no GIL (8 lanes)** | *no public JSC equivalent* | **4.84×** |
+
+WebAssembly threads come along too: complete atomic opcode execution, shared
+memory, and `wait`/`notify` — **17.23 M/s** contended adds and **287,444**
+wait/notify handoffs per second at eight workers.
+
+Underneath sits a concurrent, generational GC with write barriers, per-structure
+locks, and precise frame roots — the whole surface gated in CI by
+ThreadSanitizer, fuzzers, and a parallel test262 corpus.
+
+The toolchain is parallel too: type-checking and compilation fan out one worker
+thread per core off an atomic cursor, regression-tested to produce output
+identical to a serial run.
+
+> **Engine migration in flight:** the parallel engine is
+> [zig-js](https://github.com/zig-utils/zig-js), which powers Home's repository
+> tooling today. The Bun-parity production runtime still links vendored
+> JavaScriptCore while the private ABI surface is ported —
+> [tracked here](https://github.com/zig-utils/zig-js/blob/main/docs/HOME_INTEGRATION.md).
 
 ---
 
@@ -91,9 +126,10 @@ a power operator (`**`), and integer division (`~/`).
 
 ## Why Home?
 
+- **Truly parallel JS** — real threads over a shared heap, no GIL, no `postMessage` tax
 - **Zero dependencies** — one binary is the runtime, compiler, LSP, bundler, package manager, and test runner
 - **TypeScript is native** — executed directly, not transpiled by a separate tool first
-- **Fast** — parallel compilation with aggressive IR caching
+- **Fast** — 2.3–2.5× JavaScriptCore throughput, plus parallel compilation with aggressive IR caching
 - **Safe** — memory safety without manual management or complex lifetimes
 - **Joyful** — TypeScript-inspired syntax, with an escape hatch when you need more
 - **Cross-platform UI** — native desktop and mobile apps via [Craft](https://github.com/home-lang/craft)
@@ -107,6 +143,8 @@ Every number below is a file-count, row-count, or byte-for-byte comparison.
 
 | Area | Status |
 |---|---|
+| **test262** (engine conformance) | **53,175 / 53,175** |
+| **WebAssembly** (ten-profile matrix) | **151,802 / 151,802** applicable |
 | TypeScript conformance corpus (coarse) | **5,907 / 5,907 — 100%** |
 | TypeScript conformance (byte-for-byte exact) | **~82.5%**, ratcheting weekly |
 | `TSxxxx` diagnostic codes emitted | **1,620 / 2,079** — the *reachable* subset is complete |
@@ -117,8 +155,9 @@ Every number below is a file-count, row-count, or byte-for-byte comparison.
 See the **[full parity tables](https://github.com/home-lang/home#parity-status)**
 and the per-feature drill-downs for
 [TypeScript](https://github.com/home-lang/home/blob/main/docs/PARITY-TYPESCRIPT.md),
-[Node](https://github.com/home-lang/home/blob/main/docs/PARITY-NODE.md), and
-[Bun](https://github.com/home-lang/home/blob/main/docs/PARITY-BUN.md).
+[Node](https://github.com/home-lang/home/blob/main/docs/PARITY-NODE.md),
+[Bun](https://github.com/home-lang/home/blob/main/docs/PARITY-BUN.md), and the
+[engine's thread model](https://github.com/zig-utils/zig-js/blob/main/docs/threads/index.md).
 
 ---
 
@@ -153,6 +192,7 @@ scripts/check-examples.sh                                 # type-check every exa
 | Repository | What it is |
 |---|---|
 | **[home](https://github.com/home-lang/home)** | The runtime, compiler, standard library, and TypeScript frontend |
+| **[zig-js](https://github.com/zig-utils/zig-js)** | The JavaScript engine — pure Zig, parallel, no GIL |
 | **[craft](https://github.com/home-lang/craft)** | Performant, native desktop & mobile apps with web languages |
 | **[pantry-registry](https://github.com/home-lang/pantry-registry)** | A performant, universal package manager and registry |
 | **[home-os](https://github.com/home-lang/home-os)** | A safe, performant & modern operating system |
@@ -165,8 +205,7 @@ scripts/check-examples.sh                                 # type-check every exa
 
 Home is under **active development**. The lexer, parser, type inference, and
 interpreter are usable today; native codegen, tooling, and the runtime are
-still maturing — the JS-callable realm is live via `home eval`, while the
-default `home run` path is still converging. The
+still maturing, and the engine migration described above is in progress. The
 [capability matrix](https://github.com/home-lang/home/blob/main/docs/CAPABILITY_MATRIX.md)
 is deliberately conservative: anything not exercised by an example or test
 stays marked in-progress.
